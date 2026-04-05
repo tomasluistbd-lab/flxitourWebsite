@@ -64,15 +64,16 @@ const About = () => {
               />
             </div>
             <div className="lg:w-1/2">
-              <h2 className="text-3xl font-display font-bold text-foreground mb-6">A Nossa Missão</h2>
+              <h2 className="text-3xl font-display font-bold text-foreground mb-6">O Coração da FLUXITOUR: Quatro Gerações de Excelência</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                A FLUXITOUR® é uma referência em transportes de luxo em Portugal, dedicada a proporcionar experiências de viagem que superam o convencional. Com foco no detalhe, garantimos que cada quilómetro é sinónimo de sofisticação.
+                A FLUXITOUR© é o culminar de uma herança familiar dedicada à arte de bem receber. Sediada na prestigiada vila de Cascais, a nossa história não se mede apenas em quilómetros, mas em décadas de dedicação ao acolhimento, aos eventos e à hotelaria de luxo. Com quase dois séculos de experiência acumulada no setor, somos a quarta geração de uma família que transformou a hospitalidade num legado de prestígio.
+
               </p>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Desde transfers executivos a roteiros personalizados pelas paisagens mais deslumbrantes do país, a nossa equipa de chauffeurs profissionais está preparada para oferecer um serviço de concierge rodoviário de excelência.
+                Acreditamos que o verdadeiro luxo reside nos detalhes que o dinheiro não compra: a diferença, o carisma e o charme tipico português. Para nós, a excelência não é um destino estático, mas um desafio diário que nos obriga a evoluir não só como prestadores de serviços, mas como pessoas.
+
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Acreditamos num futuro sustentável. Por isso, investimos continuamente numa frota moderna e ecológica, permitindo que os nossos clientes viajem com consciência ambiental sem prescindir do luxo absoluto.
               </p>
             </div>
           </div>
