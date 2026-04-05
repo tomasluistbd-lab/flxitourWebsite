@@ -17,40 +17,49 @@ import fleetEclass from "@/assets/fleet-eclass.jpg";
 const Index = () => {
   return (
     <Layout>
-      <section className="relative min-h-screen flex items-center">
+      <section className="relative min-h-screen flex items-center pt-24 md:pt-0">
         <div className="absolute inset-0">
-          <img src={heroImg} alt="FLUXITOUR Luxury Transport" className="w-full h-full object-cover" width={1920} height={1080} />
+          <img 
+            src={heroImg} 
+            alt="FLUXITOUR Luxury Transport" 
+            className="w-full h-full object-cover" 
+            width={1920} 
+            height={1080} 
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/30" />
         </div>
 
-        <div className="absolute top-32 left-0 w-full text-center z-20 px-4">
-          <p className="text-5xl md:text-7xl font-display font-bold gold-text-gradient italic leading-tight pb-2 mb-12 animate-fade-in">
-  "Inspired by the fear of being average"
+        {/* Frase de Inspiração - Ajustada para Responsividade */}
+        <div className="absolute top-20 md:top-32 left-0 w-full text-center z-20 px-4">
+          <p className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-bold gold-text-gradient italic leading-tight animate-fade-in opacity-90">
+            "Inspired by the fear of being average"
           </p>
         </div>
 
-        <div className="relative container mx-auto px-4 lg:px-8 z-10 mt-32">
+        <div className="relative container mx-auto px-4 lg:px-8 z-10 mt-28 md:mt-32">
           <div className="max-w-2xl">
-            <h1 className="text-5xl md:text-7xl font-display font-bold text-foreground leading-tight mb-2">
+            {/* Títulos com tamanhos adaptáveis para iPhone */}
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold text-foreground leading-tight">
               Transportes de luxo
             </h1>
-            <h1 className="text-5xl md:text-7xl font-display font-bold gold-text-gradient leading-tight mb-6 pb-2 mb-12">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold gold-text-gradient leading-tight mb-8">
               em Portugal
             </h1>
-            <p className="text-lg text-foreground/80 font-body leading-relaxed mb-8 max-w-lg">
-            Definimos a diferença no transporte de luxo, onde a pontualidade, o requinte e as mais exclusivas localizações fundem-se em momentos memoráveis. Na FLUXITOUR©, cada quilómetro é desenhado para superar expectativas, garantindo um serviço de prestígio personalizado para cada pessoa. Da sofisticação de um transfer executivo ao charme eterno dos nossos clássicos, descubra a facilidade de viajar com quem transforma o caminho no seu melhor destino.
-
+            
+            <p className="text-base md:text-lg text-foreground/80 font-body leading-relaxed mb-8 max-w-lg">
+              Definimos a diferença no transporte de luxo, onde a pontualidade, o requinte e as mais exclusivas localizações fundem-se em momentos memoráveis. Na FLUXITOUR©, cada quilómetro é desenhado para superar expectativas, garantindo um serviço de prestígio personalizado para cada pessoa. Da sofisticação de um transfer executivo ao charme eterno dos nossos clássicos, descubra a facilidade de viajar com quem transforma o caminho no seu melhor destino.
             </p>
+
             <div className="flex flex-wrap gap-4">
               <a
                 href="#booking"
-                className="gold-gradient px-8 py-4 text-sm font-semibold tracking-wider uppercase text-primary-foreground hover:opacity-90 transition-opacity"
+                className="gold-gradient w-full sm:w-auto px-8 py-4 text-sm font-bold tracking-wider uppercase text-primary-foreground hover:opacity-95 transition-all text-center shadow-lg"
               >
                 Reservar Transfer
               </a>
               <Link
                 to="/services"
-                className="border border-foreground/30 px-8 py-4 text-sm font-semibold tracking-wider uppercase text-foreground hover:border-primary hover:text-primary transition-colors"
+                className="border border-foreground/30 w-full sm:w-auto px-8 py-4 text-sm font-semibold tracking-wider uppercase text-foreground hover:border-primary hover:text-primary transition-colors text-center"
               >
                 Nossos Serviços
               </Link>
@@ -59,9 +68,10 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="section-card py-6 border-y border-border">
+      {/* Secção de Features Rápidas */}
+      <section className="section-card py-6 border-y border-border overflow-hidden">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10 text-xs text-muted-foreground font-body tracking-wider uppercase text-center">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-10 text-[10px] md:text-xs text-muted-foreground font-body tracking-wider uppercase text-center">
             <span>Motorista Privado</span>
             <span className="text-primary">|</span>
             <span>Wi-Fi Gratuito</span>
@@ -75,15 +85,16 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Secção de Serviços */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
           <p className="text-xs font-body font-semibold tracking-[0.3em] uppercase text-primary text-center mb-3">
             O Que Oferecemos
           </p>
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-4 max-w-3xl mx-auto">
-            Modelos adequados a qualquer ocasião, sejam transferes executivos, serviços corporativos, eventos, ou deslocações personalizadas.
+          <h2 className="text-2xl md:text-4xl font-display font-bold text-foreground text-center mb-6 max-w-3xl mx-auto leading-snug">
+            Modelos adequados a qualquer ocasião, sejam transferes executivos, serviços corporativos, eventos ou deslocações personalizadas.
           </h2>
-          <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto text-sm md:text-base">
             Tours privados, transfers e táxi de aeroporto. Transporte terrestre com classe, elegância e exclusividade. Totalmente segurado e licenciado.
           </p>
 
@@ -96,6 +107,7 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Secção da Frota */}
       <section className="section-card py-20 border-y border-border">
         <div className="container mx-auto px-4 lg:px-8">
           <p className="text-xs font-body font-semibold tracking-[0.3em] uppercase text-primary text-center mb-3">
@@ -118,7 +130,7 @@ const Index = () => {
           <div className="text-center mt-10">
             <Link
               to="/fleet"
-              className="border border-primary text-primary px-8 py-3 text-sm font-semibold tracking-wider uppercase hover:bg-primary hover:text-primary-foreground transition-colors inline-block"
+              className="border border-primary text-primary px-8 py-3 text-sm font-bold tracking-wider uppercase hover:bg-primary hover:text-primary-foreground transition-all inline-block"
             >
               Ver Toda a Frota
             </Link>
