@@ -1,24 +1,25 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import logo from "@/assets/logo.jpg";
-
-const navItems = [
-  { label: "Home", path: "/" },
-  { label: "Serviços", path: "/services" },
-  { label: "Frota", path: "/fleet" },
-  { label: "Blog", path: "/blog" },
-  { label: "Sobre Nós", path: "/about" },
-  { label: "Contacto", path: "/contact" },
-];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t, i18n } = useTranslation();
 
-  // Função para lidar com o clique no botão Reservar
+  // Itens de navegação usando as chaves de tradução
+  const navItems = [
+    { label: t("home", "Home"), path: "/" },
+    { label: t("servicos", "Serviços"), path: "/services" },
+    { label: t("frota", "Frota"), path: "/fleet" },
+    { label: t("blog", "Blog"), path: "/blog" },
+    { label: t("sobre", "Sobre Nós"), path: "/about" },
+    { label: t("contacto", "Contacto"), path: "/contact" },
+  ];
+
   const handleBookingClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // Se estivermos na Home, fazemos scroll suave
     if (location.pathname === "/") {
       e.preventDefault();
       const element = document.getElementById("booking");
@@ -26,8 +27,11 @@ const Navbar = () => {
         element.scrollIntoView({ behavior: "smooth" });
       }
     }
-    // Fecha o menu mobile se estiver aberto
     setIsOpen(false);
+  };
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
   };
 
   return (
@@ -40,9 +44,9 @@ const Navbar = () => {
             <img 
               src={logo} 
               alt="FLUXITOUR logo" 
-              className="h-12 w-auto object-contain bg-transparent" 
+              className="h-10 md:h-12 w-auto object-contain bg-transparent" 
             />
-            <span className="text-2xl font-display font-bold gold-text-gradient tracking-wider">
+            <span className="text-xl md:text-2xl font-display font-bold gold-text-gradient tracking-wider">
               FLUXITOUR
             </span>
           </Link>
@@ -53,7 +57,7 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`text-sm font-body font-medium tracking-widest uppercase transition-colors hover:text-primary ${
+                className={`text-xs font-body font-medium tracking-widest uppercase transition-colors hover:text-primary ${
                   location.pathname === item.path ? "text-primary" : "text-foreground/80"
                 }`}
               >
@@ -62,33 +66,54 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Contacto e Botão Reservar (Desktop) */}
-          <div className="hidden lg:flex items-center gap-4">
+          {/* Tradutor, Contacto e Reservar */}
+          <div className="hidden lg:flex items-center gap-6">
+            
+            {/* Seletor de Idiomas */}
+            <div className="flex items-center gap-3 mr-2 border-r border-border pr-6">
+              <button onClick={() => changeLanguage('pt')} title="PT" className="hover:scale-110 transition-transform">
+                <img src="https://flagcdn.com/w20/pt.png" alt="Português" className="w-5" />
+              </button>
+              <button onClick={() => changeLanguage('en')} title="EN" className="hover:scale-110 transition-transform">
+                <img src="https://flagcdn.com/w20/gb.png" alt="English" className="w-5" />
+              </button>
+              <button onClick={() => changeLanguage('es')} title="ES" className="hover:scale-110 transition-transform">
+                <img src="https://flagcdn.com/w20/es.png" alt="Español" className="w-5" />
+              </button>
+            </div>
+
             <a 
               href="tel:+351916822104" 
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mr-2"
+              className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
             >
-              <Phone className="w-4 h-4 text-primary" />
+              <Phone className="w-3.5 h-3.5 text-primary" />
               +351 916 822 104
             </a>
             
-            {/* O NOVO BOTÃO QUE APONTA PARA O FORMULÁRIO */}
             <a
               href="/#booking"
               onClick={handleBookingClick}
-              className="gold-gradient px-6 py-2.5 text-sm font-semibold tracking-wider uppercase text-primary-foreground hover:opacity-95 transition-all shadow-md active:scale-95"
+              className="gold-gradient px-6 py-2.5 text-xs font-bold tracking-wider uppercase text-primary-foreground hover:opacity-95 transition-all shadow-md active:scale-95"
             >
-              Reservar
+              {t("reservar", "Reservar")}
             </a>
           </div>
 
           {/* Toggle Mobile */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden text-foreground p-2"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="flex lg:hidden items-center gap-4">
+            {/* Tradutor Rápido Mobile */}
+            <div className="flex gap-3 mr-2">
+              <button onClick={() => changeLanguage('pt')}><img src="https://flagcdn.com/w20/pt.png" className="w-5" alt="PT" /></button>
+              <button onClick={() => changeLanguage('en')}><img src="https://flagcdn.com/w20/gb.png" className="w-5" alt="EN" /></button>
+              <button onClick={() => changeLanguage('es')}><img src="https://flagcdn.com/w20/es.png" className="w-5" alt="ES" /></button>
+            </div>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-foreground p-2"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -109,13 +134,12 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Botão Reservar Mobile */}
             <a
               href="/#booking"
               onClick={handleBookingClick}
               className="gold-gradient px-6 py-4 text-sm font-bold tracking-widest uppercase text-primary-foreground text-center mt-4 shadow-lg"
             >
-              Reservar Agora
+              {t("reservar", "Reservar Agora")}
             </a>
           </div>
         </div>
