@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { useTranslation } from "react-i18next";
 import { CalendarDays, MapPin, Tag } from "lucide-react";
@@ -321,12 +320,12 @@ const Events = () => {
                     {event.description}
                   </p>
 
-                  <Link
-                    to="/#booking"
+                  <a
+                    href="/#booking"
                     className="gold-gradient px-5 py-3 text-xs font-bold tracking-wider uppercase text-primary-foreground hover:opacity-95 transition-all text-center shadow-md active:scale-[0.98]"
                   >
                     {t("events_book")}
-                  </Link>
+                  </a>
                 </div>
               </div>
             ))}
@@ -342,12 +341,12 @@ const Events = () => {
             {t("events_info_title")}
           </h2>
           <p className="text-muted-foreground mb-8">{t("events_info_desc")}</p>
-          <Link
-            to="/#booking"
+          <a
+            href="/#booking"
             className="gold-gradient inline-block px-10 py-4 text-sm font-bold tracking-wider uppercase text-primary-foreground hover:opacity-95 transition-all shadow-lg"
           >
             {t("events_book")}
-          </Link>
+          </a>
         </div>
       </section>
     </Layout>
