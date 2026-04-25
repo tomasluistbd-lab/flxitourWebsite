@@ -9,12 +9,13 @@ const Navbar = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
 
-  // Itens de navegação usando as chaves de tradução
   const navItems = [
     { label: t("home", "Home"), path: "/" },
     { label: t("servicos", "Serviços"), path: "/services" },
     { label: t("frota", "Frota"), path: "/fleet" },
     { label: t("blog", "Blog"), path: "/blog" },
+    { label: t("events_nav", "EVENTOS"), path: "/events" },
+    { label: "FAQ", path: "/faq" },
     { label: t("sobre", "Sobre Nós"), path: "/about" },
     { label: t("contacto", "Contacto"), path: "/contact" },
   ];
@@ -34,17 +35,32 @@ const Navbar = () => {
     i18n.changeLanguage(lng);
   };
 
+  const handleNavClick = (path: string) => {
+    if (location.pathname === path) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const currentLang = i18n.language?.slice(0, 2) || "pt";
+
+  const flags = [
+    { code: "pt", src: "https://flagcdn.com/w20/pt.png", alt: "Português" },
+    { code: "en", src: "https://flagcdn.com/w20/gb.png", alt: "English" },
+    { code: "es", src: "https://flagcdn.com/w20/es.png", alt: "Español" },
+    { code: "fr", src: "https://flagcdn.com/w20/fr.png", alt: "Français" },
+  ];
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          
+
           {/* Logo e Nome */}
           <Link to="/" className="flex items-center gap-3">
-            <img 
-              src={logo} 
-              alt="FLUXITOUR logo" 
-              className="h-10 md:h-12 w-auto object-contain bg-transparent" 
+            <img
+              src={logo}
+              alt="FLUXITOUR logo"
+              className="h-10 md:h-12 w-auto object-contain bg-transparent"
             />
             <span className="text-xl md:text-2xl font-display font-bold gold-text-gradient tracking-wider">
               FLUXITOUR
@@ -57,6 +73,7 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => handleNavClick(item.path)}
                 className={`text-xs font-body font-medium tracking-widest uppercase transition-colors hover:text-primary ${
                   location.pathname === item.path ? "text-primary" : "text-foreground/80"
                 }`}
@@ -68,28 +85,29 @@ const Navbar = () => {
 
           {/* Tradutor, Contacto e Reservar */}
           <div className="hidden lg:flex items-center gap-6">
-            
+
             {/* Seletor de Idiomas */}
             <div className="flex items-center gap-3 mr-2 border-r border-border pr-6">
-              <button onClick={() => changeLanguage('pt')} title="PT" className="hover:scale-110 transition-transform">
-                <img src="https://flagcdn.com/w20/pt.png" alt="Português" className="w-5" />
-              </button>
-              <button onClick={() => changeLanguage('en')} title="EN" className="hover:scale-110 transition-transform">
-                <img src="https://flagcdn.com/w20/gb.png" alt="English" className="w-5" />
-              </button>
-              <button onClick={() => changeLanguage('es')} title="ES" className="hover:scale-110 transition-transform">
-                <img src="https://flagcdn.com/w20/es.png" alt="Español" className="w-5" />
-              </button>
+              {flags.map((f) => (
+                <button
+                  key={f.code}
+                  onClick={() => changeLanguage(f.code)}
+                  title={f.alt}
+                  className={`hover:scale-110 transition-transform ${currentLang === f.code ? "ring-2 ring-primary ring-offset-1 ring-offset-background" : ""}`}
+                >
+                  <img src={f.src} alt={f.alt} className="w-5 h-auto" />
+                </button>
+              ))}
             </div>
 
-            <a 
-              href="tel:+351916822104" 
+            <a
+              href="tel:+351916822104"
               className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-primary" />
               +351 916 822 104
             </a>
-            
+
             <a
               href="/#booking"
               onClick={handleBookingClick}
@@ -100,12 +118,18 @@ const Navbar = () => {
           </div>
 
           {/* Toggle Mobile */}
-          <div className="flex lg:hidden items-center gap-4">
+          <div className="flex lg:hidden items-center gap-3">
             {/* Tradutor Rápido Mobile */}
-            <div className="flex gap-3 mr-2">
-              <button onClick={() => changeLanguage('pt')}><img src="https://flagcdn.com/w20/pt.png" className="w-5" alt="PT" /></button>
-              <button onClick={() => changeLanguage('en')}><img src="https://flagcdn.com/w20/gb.png" className="w-5" alt="EN" /></button>
-              <button onClick={() => changeLanguage('es')}><img src="https://flagcdn.com/w20/es.png" className="w-5" alt="ES" /></button>
+            <div className="flex gap-2">
+              {flags.map((f) => (
+                <button
+                  key={f.code}
+                  onClick={() => changeLanguage(f.code)}
+                  className={`transition-transform hover:scale-110 ${currentLang === f.code ? "ring-2 ring-primary ring-offset-1 ring-offset-background" : ""}`}
+                >
+                  <img src={f.src} className="w-5 h-auto" alt={f.alt} />
+                </button>
+              ))}
             </div>
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -125,7 +149,7 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                onClick={() => setIsOpen(false)}
+                onClick={() => { handleNavClick(item.path); setIsOpen(false); }}
                 className={`text-base font-medium tracking-widest uppercase transition-colors py-2 border-b border-border/10 ${
                   location.pathname === item.path ? "text-primary" : "text-foreground/80"
                 }`}
@@ -133,7 +157,7 @@ const Navbar = () => {
                 {item.label}
               </Link>
             ))}
-            
+
             <a
               href="/#booking"
               onClick={handleBookingClick}
