@@ -2,14 +2,25 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { useTranslation } from "react-i18next";
 import { getArticles, StoredArticle } from "@/lib/blogStorage";
+import { X } from "lucide-react";
 
 const Blog = () => {
   const { t } = useTranslation();
   const [storedArticles, setStoredArticles] = useState<StoredArticle[]>([]);
+  const [selected, setSelected] = useState<StoredArticle | null>(null);
 
   useEffect(() => {
     setStoredArticles(getArticles());
   }, []);
+
+  useEffect(() => {
+    if (selected) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [selected]);
 
   const blogPosts = [
     { titleKey: "blog1_title", excerptKey: "blog1_excerpt", dateKey: "blog1_date", slug: "melides-portugal" },
@@ -34,8 +45,12 @@ const Blog = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {storedArticles.map((article) => (
-              <article key={article.id} className="section-card border border-border overflow-hidden hover:border-primary/30 transition-colors group">
-                <img src={article.image} alt={article.title} className="w-full h-48 object-cover" />
+              <article
+                key={article.id}
+                onClick={() => setSelected(article)}
+                className="section-card border border-border overflow-hidden hover:border-primary/30 transition-colors group cursor-pointer"
+              >
+                <img src={article.image} alt={article.title} className="w-full h-48 object-cover group-hover:opacity-90 transition-opacity" />
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-xs text-primary font-semibold tracking-wider uppercase">{article.category}</span>
@@ -44,8 +59,8 @@ const Blog = () => {
                   <h3 className="text-lg font-display font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
                     {article.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">{article.excerpt}</p>
-                  <span className="text-xs font-semibold tracking-wider uppercase text-primary">{t("blog_read_more")}</span>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-3">{article.excerpt}</p>
+                  <span className="text-xs font-semibold tracking-wider uppercase text-primary">{t("blog_read_more")} →</span>
                 </div>
               </article>
             ))}
@@ -68,6 +83,44 @@ const Blog = () => {
           </div>
         </div>
       </section>
+
+      {/* Article modal */}
+      {selected && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto"
+          onClick={() => setSelected(null)}
+        >
+          <div
+            className="relative bg-background border border-border w-full max-w-2xl my-8 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelected(null)}
+              className="absolute top-4 right-4 z-10 text-muted-foreground hover:text-foreground transition-colors bg-background/80 rounded-full p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <img src={selected.image} alt={selected.title} className="w-full h-60 object-cover" />
+            <div className="p-8">
+              <span className="text-[10px] font-bold tracking-widest uppercase text-primary mb-3 block">
+                {selected.category}
+              </span>
+              <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-2 leading-snug">
+                {selected.title}
+              </h2>
+              <p className="text-xs text-muted-foreground mb-6">
+                {selected.date} · {selected.author}
+              </p>
+              <p className="text-sm text-muted-foreground italic mb-8 border-l-2 border-primary pl-4 leading-relaxed">
+                {selected.excerpt}
+              </p>
+              <div className="text-sm text-foreground/85 leading-relaxed whitespace-pre-line">
+                {selected.content}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };
