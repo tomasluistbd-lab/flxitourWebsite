@@ -7,15 +7,31 @@ import { Mail } from "lucide-react";
 const FAQPage = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({ name: "", email: "", question: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`FAQ FLUXITOUR - ${formData.name}`);
-    const body = encodeURIComponent(
-      `Nome: ${formData.name}\nEmail: ${formData.email}\n\nQuestão:\n${formData.question}`
-    );
-    window.open(`mailto:fluxitour.geral@outlook.pt?subject=${subject}&body=${body}`, "_blank");
-    setFormData({ name: "", email: "", question: "" });
+    setStatus("sending");
+    try {
+      const res = await fetch("https://formspree.io/f/xlgowvre", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: `FAQ FLUXITOUR - ${formData.name}`,
+          nome: formData.name,
+          email: formData.email,
+          questao: formData.question,
+        }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setFormData({ name: "", email: "", question: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -80,11 +96,22 @@ const FAQPage = () => {
               />
             </div>
 
+            {status === "success" && (
+              <p className="text-emerald-400 text-sm border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-center">
+                Questão enviada com sucesso! Responderemos brevemente.
+              </p>
+            )}
+            {status === "error" && (
+              <p className="text-red-400 text-sm border border-red-500/30 bg-red-500/10 px-4 py-3 text-center">
+                Ocorreu um erro. Tente novamente ou contacte-nos por email.
+              </p>
+            )}
             <button
               type="submit"
-              className="w-full gold-gradient px-8 py-4 text-sm font-bold tracking-wider uppercase text-primary-foreground hover:opacity-95 transition-all shadow-lg active:scale-[0.98]"
+              disabled={status === "sending"}
+              className="w-full gold-gradient px-8 py-4 text-sm font-bold tracking-wider uppercase text-primary-foreground hover:opacity-95 transition-all shadow-lg active:scale-[0.98] disabled:opacity-60"
             >
-              {t("faq_contact_send")}
+              {status === "sending" ? "A enviar..." : t("faq_contact_send")}
             </button>
           </form>
         </div>

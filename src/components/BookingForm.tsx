@@ -17,7 +17,7 @@ const BookingForm = () => {
     message: "",
   });
 
-  const [status, setStatus] = useState<"idle" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const generateTimes = () => {
     const times = [];
@@ -31,25 +31,35 @@ const BookingForm = () => {
     return times;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const subject = encodeURIComponent(`FLUXITOUR - Pedido de Orçamento - ${formData.name}`);
-    const body = encodeURIComponent(
-      `Serviço: ${formData.service}\n` +
-      `Local de Recolha: ${formData.pickup}\n` +
-      `Local de Destino: ${formData.destination}\n` +
-      `Nome: ${formData.name}\n` +
-      `Email: ${formData.email}\n` +
-      `Telefone: ${formData.phone}\n` +
-      `Cadeiras de Criança: ${formData.childSeat}\n` +
-      `Data: ${formData.date}\n` +
-      `Hora: ${formData.time}\n` +
-      `Mensagem Adicional: ${formData.message}`
-    );
-
-    window.open(`mailto:fluxitour.geral@outlook.pt?subject=${subject}&body=${body}`, '_blank');
-    setStatus("success");
+    setStatus("sending");
+    try {
+      const res = await fetch("https://formspree.io/f/xlgowvre", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: `FLUXITOUR - Pedido de Orçamento - ${formData.name}`,
+          servico: formData.service,
+          recolha: formData.pickup,
+          destino: formData.destination,
+          nome: formData.name,
+          email: formData.email,
+          telefone: formData.phone,
+          cadeiras: formData.childSeat,
+          data: formData.date,
+          hora: formData.time,
+          mensagem: formData.message,
+        }),
+      });
+      if (res.ok) {
+        setStatus("success");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -64,13 +74,10 @@ const BookingForm = () => {
           </h2>
 
           {status === "success" ? (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-8 rounded text-center my-10">
-              <h3 className="text-xl font-bold mb-2">{t("booking_success_title")}</h3>
-              <p>{t("booking_success_desc")}</p>
-              <button
-                onClick={() => setStatus("idle")}
-                className="mt-4 text-sm underline"
-              >
+            <div className="border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 px-6 py-10 text-center my-10">
+              <h3 className="text-xl font-display font-bold mb-2">{t("booking_success_title")}</h3>
+              <p className="text-sm mb-4">{t("booking_success_desc")}</p>
+              <button onClick={() => setStatus("idle")} className="text-xs underline text-emerald-400">
                 {t("booking_success_again")}
               </button>
             </div>
@@ -214,11 +221,17 @@ const BookingForm = () => {
                   className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm focus:outline-none focus:border-primary transition-colors resize-none"
                 />
 
+                {status === "error" && (
+                  <p className="text-red-400 text-sm text-center border border-red-500/30 bg-red-500/10 px-4 py-3">
+                    Ocorreu um erro. Tente novamente ou contacte-nos por email.
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="w-full gold-gradient px-8 py-5 text-sm font-bold tracking-[0.2em] uppercase text-primary-foreground hover:opacity-95 transition-all shadow-xl active:scale-[0.98]"
+                  disabled={status === "sending"}
+                  className="w-full gold-gradient px-8 py-5 text-sm font-bold tracking-[0.2em] uppercase text-primary-foreground hover:opacity-95 transition-all shadow-xl active:scale-[0.98] disabled:opacity-60"
                 >
-                  {t("booking_submit")}
+                  {status === "sending" ? "A enviar..." : t("booking_submit")}
                 </button>
               </form>
             </>

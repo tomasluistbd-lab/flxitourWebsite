@@ -6,12 +6,31 @@ import { useTranslation } from "react-i18next";
 const Contact = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent("Contacto FLUXITOUR");
-    const body = encodeURIComponent(`Nome: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`);
-    window.open(`mailto:fluxitour.geral@outlook.pt?subject=${subject}&body=${body}`, '_blank');
+    setStatus("sending");
+    try {
+      const res = await fetch("https://formspree.io/f/xlgowvre", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: `Contacto FLUXITOUR - ${formData.name}`,
+          nome: formData.name,
+          email: formData.email,
+          mensagem: formData.message,
+        }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -57,11 +76,22 @@ const Contact = () => {
                   className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground resize-none"
                   required
                 />
+                {status === "success" && (
+                  <p className="text-emerald-400 text-sm border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-center">
+                    Mensagem enviada com sucesso! Entraremos em contacto brevemente.
+                  </p>
+                )}
+                {status === "error" && (
+                  <p className="text-red-400 text-sm border border-red-500/30 bg-red-500/10 px-4 py-3 text-center">
+                    Ocorreu um erro. Tente novamente ou contacte-nos directamente por email.
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="gold-gradient px-8 py-4 text-sm font-semibold tracking-wider uppercase text-primary-foreground hover:opacity-90 transition-opacity"
+                  disabled={status === "sending"}
+                  className="gold-gradient px-8 py-4 text-sm font-semibold tracking-wider uppercase text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-60"
                 >
-                  {t("contact_send")}
+                  {status === "sending" ? "A enviar..." : t("contact_send")}
                 </button>
               </form>
             </div>
