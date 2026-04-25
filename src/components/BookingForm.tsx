@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const BookingForm = () => {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     service: "",
     pickup: "",
@@ -14,8 +17,7 @@ const BookingForm = () => {
     message: "",
   });
 
-  // Estado para gerir o feedback de envio
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success">("idle");
 
   const generateTimes = () => {
     const times = [];
@@ -29,39 +31,25 @@ const BookingForm = () => {
     return times;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("sending");
 
-    // Prepara os dados para o Formspree
-    const formspreeData = {
-      ...formData,
-      _subject: `NOVO PEDIDO DE ORÇAMENTO - ${formData.name}`,
-    };
+    const subject = encodeURIComponent(`FLUXITOUR - Pedido de Orçamento - ${formData.name}`);
+    const body = encodeURIComponent(
+      `Serviço: ${formData.service}\n` +
+      `Local de Recolha: ${formData.pickup}\n` +
+      `Local de Destino: ${formData.destination}\n` +
+      `Nome: ${formData.name}\n` +
+      `Email: ${formData.email}\n` +
+      `Telefone: ${formData.phone}\n` +
+      `Cadeiras de Criança: ${formData.childSeat}\n` +
+      `Data: ${formData.date}\n` +
+      `Hora: ${formData.time}\n` +
+      `Mensagem Adicional: ${formData.message}`
+    );
 
-    try {
-      const response = await fetch("https://formspree.io/f/xlgowvre", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formspreeData),
-      });
-
-      if (response.ok) {
-        setStatus("success");
-        // Limpa o formulário após sucesso
-        setFormData({
-          service: "", pickup: "", destination: "", name: "",
-          email: "", phone: "", childSeat: "nao", date: "",
-          time: "08:00", message: ""
-        });
-      } else {
-        setStatus("error");
-      }
-    } catch (error) {
-      setStatus("error");
-    }
+    window.open(`mailto:fluxitour.geral@outlook.pt?subject=${subject}&body=${body}`, '_blank');
+    setStatus("success");
   };
 
   return (
@@ -69,34 +57,32 @@ const BookingForm = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs font-body font-semibold tracking-[0.3em] uppercase text-primary text-center mb-3">
-            Reservas
+            {t("booking_label")}
           </p>
           <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-4">
-            Pedido de Orçamento
+            {t("booking_title")}
           </h2>
-          
+
           {status === "success" ? (
             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-8 rounded text-center my-10">
-              <h3 className="text-xl font-bold mb-2">Pedido Enviado com Sucesso!</h3>
-              <p>Obrigado pelo seu contacto. Responderemos para o seu e-mail em breve.</p>
-              <button 
+              <h3 className="text-xl font-bold mb-2">{t("booking_success_title")}</h3>
+              <p>{t("booking_success_desc")}</p>
+              <button
                 onClick={() => setStatus("idle")}
                 className="mt-4 text-sm underline"
               >
-                Enviar outro pedido
+                {t("booking_success_again")}
               </button>
             </div>
           ) : (
             <>
               <p className="text-muted-foreground text-center mb-10">
-                Preencha os campos abaixo e entraremos em contacto com o valor final do seu transfer.
+                {t("booking_desc")}
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* O atributo 'name' em cada campo é crucial para o Formspree identificar os dados */}
-                
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Serviço</label>
+                  <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_service_label")}</label>
                   <select
                     name="servico"
                     value={formData.service}
@@ -104,21 +90,21 @@ const BookingForm = () => {
                     className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm focus:outline-none focus:border-primary transition-colors appearance-none"
                     required
                   >
-                    <option value="">Selecione um Serviço</option>
-                    <option value="Transfer Aeroporto">Transfer Aeroporto</option>
-                    <option value="Tour Privado">Tour Privado</option>
-                    <option value="Transfer Executivo">Transfer Executivo</option>
-                    <option value="Eventos & Casamentos">Eventos & Casamentos</option>
+                    <option value="">{t("booking_service_placeholder")}</option>
+                    <option value="Transfer Aeroporto">{t("booking_service_airport")}</option>
+                    <option value="Tour Privado">{t("booking_service_tour")}</option>
+                    <option value="Transfer Executivo">{t("booking_service_executive")}</option>
+                    <option value="Eventos & Casamentos">{t("booking_service_events")}</option>
                   </select>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Local de Recolha</label>
+                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_pickup_label")}</label>
                     <input
                       type="text"
                       name="recolha"
-                      placeholder="Ex: Aeroporto Lisboa"
+                      placeholder={t("booking_pickup_placeholder")}
                       value={formData.pickup}
                       onChange={(e) => setFormData({ ...formData, pickup: e.target.value })}
                       className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
@@ -126,11 +112,11 @@ const BookingForm = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Local de Destino</label>
+                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_destination_label")}</label>
                     <input
                       type="text"
                       name="destino"
-                      placeholder="Ex: Cascais / Hotel"
+                      placeholder={t("booking_destination_placeholder")}
                       value={formData.destination}
                       onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
                       className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
@@ -141,7 +127,7 @@ const BookingForm = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Nome</label>
+                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_name_label")}</label>
                     <input
                       type="text"
                       name="nome_cliente"
@@ -152,7 +138,7 @@ const BookingForm = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Email</label>
+                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_email_label")}</label>
                     <input
                       type="email"
                       name="email_cliente"
@@ -166,7 +152,7 @@ const BookingForm = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Telefone</label>
+                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_phone_label")}</label>
                     <input
                       type="tel"
                       name="telefone"
@@ -177,23 +163,23 @@ const BookingForm = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Cadeiras de Criança</label>
+                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_childseat_label")}</label>
                     <select
                       name="cadeiras"
                       value={formData.childSeat}
                       onChange={(e) => setFormData({ ...formData, childSeat: e.target.value })}
                       className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
                     >
-                      <option value="nao">Não necessito</option>
-                      <option value="Sim - Cadeira">Sim (Cadeira)</option>
-                      <option value="Sim - Assento Elevatório">Sim (Assento Elevatório)</option>
+                      <option value="nao">{t("booking_childseat_no")}</option>
+                      <option value="Sim - Cadeira">{t("booking_childseat_seat")}</option>
+                      <option value="Sim - Assento Elevatório">{t("booking_childseat_booster")}</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Data</label>
+                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_date_label")}</label>
                     <input
                       type="date"
                       name="data_reserva"
@@ -204,7 +190,7 @@ const BookingForm = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">Hora</label>
+                    <label className="text-[10px] uppercase tracking-widest text-primary font-bold ml-1">{t("booking_time_label")}</label>
                     <select
                       name="hora_reserva"
                       value={formData.time}
@@ -212,8 +198,8 @@ const BookingForm = () => {
                       className="w-full bg-secondary border border-border px-4 py-3 text-foreground text-sm focus:outline-none focus:border-primary transition-colors"
                       required
                     >
-                      {generateTimes().map(t => (
-                        <option key={t} value={t}>{t}</option>
+                      {generateTimes().map((time) => (
+                        <option key={time} value={time}>{time}</option>
                       ))}
                     </select>
                   </div>
@@ -221,7 +207,7 @@ const BookingForm = () => {
 
                 <textarea
                   name="mensagem_extra"
-                  placeholder="Mensagem Adicional (Nº de voo, malas extras, etc.)"
+                  placeholder={t("booking_message_placeholder")}
                   rows={4}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -230,17 +216,10 @@ const BookingForm = () => {
 
                 <button
                   type="submit"
-                  disabled={status === "sending"}
-                  className="w-full gold-gradient px-8 py-5 text-sm font-bold tracking-[0.2em] uppercase text-primary-foreground hover:opacity-95 transition-all shadow-xl active:scale-[0.98] disabled:opacity-50"
+                  className="w-full gold-gradient px-8 py-5 text-sm font-bold tracking-[0.2em] uppercase text-primary-foreground hover:opacity-95 transition-all shadow-xl active:scale-[0.98]"
                 >
-                  {status === "sending" ? "A enviar..." : "Pedir Orçamento Final"}
+                  {t("booking_submit")}
                 </button>
-                
-                {status === "error" && (
-                  <p className="text-red-500 text-center text-sm">
-                    Ocorreu um erro ao enviar. Por favor, tente novamente ou contacte-nos por telefone.
-                  </p>
-                )}
               </form>
             </>
           )}

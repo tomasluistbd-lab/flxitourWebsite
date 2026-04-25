@@ -3,7 +3,9 @@ import Layout from "@/components/Layout";
 import ServiceCard from "@/components/ServiceCard";
 import FleetCard from "@/components/FleetCard";
 import BookingForm from "@/components/BookingForm";
+import FAQ from "@/components/FAQ";
 import Testimonials from "@/components/Testimonials";
+import { useTranslation } from "react-i18next";
 import heroImg from "@/assets/hero-car.jpg";
 import toursImg from "@/assets/tours-portugal.jpg";
 import airportImg from "@/assets/airport-transfer.jpg";
@@ -15,21 +17,22 @@ import fleetVclass from "@/assets/fleet-vclass.jpg";
 import fleetEclass from "@/assets/fleet-eclass.jpg";
 
 const Index = () => {
+  const { t } = useTranslation();
+
   return (
     <Layout>
       <section className="relative min-h-screen flex items-center pt-24 md:pt-0">
         <div className="absolute inset-0">
-          <img 
-            src={heroImg} 
-            alt="FLUXITOUR Luxury Transport" 
-            className="w-full h-full object-cover" 
-            width={1920} 
-            height={1080} 
+          <img
+            src={heroImg}
+            alt="FLUXITOUR Luxury Transport"
+            className="w-full h-full object-cover"
+            width={1920}
+            height={1080}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/30" />
         </div>
 
-        {/* Frase de Inspiração - Ajustada para Responsividade */}
         <div className="absolute top-20 md:top-32 left-0 w-full text-center z-20 px-4">
           <p className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-display font-bold gold-text-gradient italic leading-tight animate-fade-in opacity-90">
             "Inspired by the fear of being average"
@@ -38,16 +41,15 @@ const Index = () => {
 
         <div className="relative container mx-auto px-4 lg:px-8 z-10 mt-28 md:mt-32">
           <div className="max-w-2xl">
-            {/* Títulos com tamanhos adaptáveis para iPhone */}
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold text-foreground leading-tight">
-              Transportes de luxo
+              {t("hero_title")}
             </h1>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold gold-text-gradient leading-tight mb-8">
-              em Portugal
+              {t("hero_subtitle")}
             </h1>
-            
+
             <p className="text-base md:text-lg text-foreground/80 font-body leading-relaxed mb-8 max-w-lg">
-              Definimos a diferença no transporte de luxo, onde a pontualidade, o requinte e as mais exclusivas localizações fundem-se em momentos memoráveis. Na FLUXITOUR©, cada quilómetro é desenhado para superar expectativas, garantindo um serviço de prestígio personalizado para cada pessoa. Da sofisticação de um transfer executivo ao charme eterno dos nossos clássicos, descubra a facilidade de viajar com quem transforma o caminho no seu melhor destino.
+              {t("hero_desc")}
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -55,76 +57,76 @@ const Index = () => {
                 href="#booking"
                 className="gold-gradient w-full sm:w-auto px-8 py-4 text-sm font-bold tracking-wider uppercase text-primary-foreground hover:opacity-95 transition-all text-center shadow-lg"
               >
-                Reservar Transfer
+                {t("btn_book_transfer")}
               </a>
               <Link
                 to="/services"
                 className="border border-foreground/30 w-full sm:w-auto px-8 py-4 text-sm font-semibold tracking-wider uppercase text-foreground hover:border-primary hover:text-primary transition-colors text-center"
               >
-                Nossos Serviços
+                {t("btn_our_services")}
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Secção de Features Rápidas */}
+      {/* Features strip */}
       <section className="section-card py-6 border-y border-border overflow-hidden">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex flex-wrap justify-center gap-4 md:gap-10 text-[10px] md:text-xs text-muted-foreground font-body tracking-wider uppercase text-center">
-            <span>Motorista Privado</span>
+            <span>{t("feature_driver")}</span>
             <span className="text-primary">|</span>
-            <span>Wi-Fi Gratuito</span>
+            <span>{t("feature_wifi")}</span>
             <span className="text-primary">|</span>
-            <span>Água & Amenities</span>
+            <span>{t("feature_water")}</span>
             <span className="text-primary">|</span>
-            <span>Carregador Telemóvel</span>
+            <span>{t("feature_charger")}</span>
             <span className="text-primary">|</span>
-            <span>Cadeira Criança</span>
+            <span>{t("feature_childseat")}</span>
           </div>
         </div>
       </section>
 
-      {/* Secção de Serviços */}
+      {/* Serviços */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 lg:px-8">
           <p className="text-xs font-body font-semibold tracking-[0.3em] uppercase text-primary text-center mb-3">
-            O Que Oferecemos
+            {t("services_label")}
           </p>
           <h2 className="text-2xl md:text-4xl font-display font-bold text-foreground text-center mb-6 max-w-3xl mx-auto leading-snug">
-            Modelos adequados a qualquer ocasião, sejam transferes executivos, serviços corporativos, eventos ou deslocações personalizadas.
+            {t("services_heading")}
           </h2>
           <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto text-sm md:text-base">
-            Tours privados, transfers e táxi de aeroporto. Transporte terrestre com classe, elegância e exclusividade. Totalmente segurado e licenciado.
+            {t("services_desc")}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <ServiceCard image={toursImg} title="Tours em Portugal" description="Descubra a beleza de Portugal com experiências de tour personalizadas." />
-            <ServiceCard image={airportImg} title="Transfers Aeroporto" description="Serviço seamless de pickup e drop-off em todos os aeroportos portugueses." />
-            <ServiceCard image={businessImg} title="Transfers Executivos" description="Serviços de chauffeur profissional para clientes empresariais." />
-            <ServiceCard image={weddingImg} title="Eventos & Casamentos" description="Torne o seu dia especial inesquecível com transporte premium." />
+            <ServiceCard image={toursImg} title={t("service_tours_title")} description={t("service_tours_desc")} />
+            <ServiceCard image={airportImg} title={t("service_airport_title")} description={t("service_airport_desc")} />
+            <ServiceCard image={businessImg} title={t("service_executive_title")} description={t("service_executive_desc")} />
+            <ServiceCard image={weddingImg} title={t("service_events_title")} description={t("service_events_desc")} />
           </div>
         </div>
       </section>
 
-      {/* Secção da Frota */}
+      {/* Frota */}
       <section className="section-card py-20 border-y border-border">
         <div className="container mx-auto px-4 lg:px-8">
           <p className="text-xs font-body font-semibold tracking-[0.3em] uppercase text-primary text-center mb-3">
-            A Nossa Frota
+            {t("fleet_label")}
           </p>
           <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-4">
-            Veículos Premium
+            {t("fleet_heading")}
           </h2>
           <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-            Transportamos pessoas em veículos novos, conduzidos por profissionais experientes e qualificados. A segurança é a prioridade.
+            {t("fleet_desc")}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <FleetCard image={fleetEqe} name="Mercedes EQE" type="Sedan Elétrico" passengers="3" luggage="2" />
-            <FleetCard image={fleetSclass} name="Mercedes S-Class" type="Sedan Executivo" passengers="3" luggage="2" />
-            <FleetCard image={fleetVclass} name="Mercedes V-Class" type="Mini Van" passengers="6-7" luggage="4" />
-            <FleetCard image={fleetEclass} name="Mercedes E-Class" type="Sedan Plus" passengers="3" luggage="2" />
+            <FleetCard image={fleetEqe} name="Mercedes EQE" type={t("type_electric_sedan")} passengers="3" luggage="2" />
+            <FleetCard image={fleetSclass} name="Mercedes S-Class" type={t("type_executive_sedan")} passengers="3" luggage="2" />
+            <FleetCard image={fleetVclass} name="Mercedes V-Class" type={t("type_minivan")} passengers="6-7" luggage="4" />
+            <FleetCard image={fleetEclass} name="Mercedes E-Class" type={t("type_sedan_plus")} passengers="3" luggage="2" />
           </div>
 
           <div className="text-center mt-10">
@@ -132,7 +134,7 @@ const Index = () => {
               to="/fleet"
               className="border border-primary text-primary px-8 py-3 text-sm font-bold tracking-wider uppercase hover:bg-primary hover:text-primary-foreground transition-all inline-block"
             >
-              Ver Toda a Frota
+              {t("fleet_view_all")}
             </Link>
           </div>
         </div>
@@ -141,6 +143,8 @@ const Index = () => {
       <BookingForm />
 
       <Testimonials />
+
+      <FAQ />
     </Layout>
   );
 };
