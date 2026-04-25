@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import logo from "@/assets/logo.jpg";
+import AdminWidget from "./AdminWidget";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -115,6 +116,7 @@ const Navbar = () => {
             >
               {t("reservar", "Reservar")}
             </a>
+            <AdminWidget />
           </div>
 
           {/* Toggle Mobile */}
