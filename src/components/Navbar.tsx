@@ -4,6 +4,7 @@ import { Menu, X, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import logo from "@/assets/logo.jpg";
 import AdminWidget from "./AdminWidget";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,6 +117,7 @@ const Navbar = () => {
             >
               {t("reservar", "Reservar")}
             </a>
+            <ThemeToggle />
             <AdminWidget />
           </div>
 
